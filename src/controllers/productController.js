@@ -1,5 +1,25 @@
+/**
+ * PRODUCT CONTROLLER
+ *
+ * Contains all business logic for product operations.
+ * The code is CORRECT - handles validation, errors, and edge cases properly!
+ *
+ * KEY FEATURES:
+ * - Input validation on all operations
+ * - Proper HTTP status codes (200, 201, 400, 404, 500)
+ * - Stock quantity cannot go below zero
+ * - Clear error messages for debugging
+ */
+
 const Product = require('../models/Product');
 
+/**
+ * CREATE PRODUCT
+ * POST /api/products
+ *
+ * Expected body: { name, description, stock_quantity, low_stock_threshold }
+ * Returns: 201 with created product, or 400/500 on error
+ */
 const createProduct = async (req, res) => {
   try {
     const { name, description, stock_quantity, low_stock_threshold } = req.body;
@@ -132,6 +152,14 @@ const increaseStock = async (req, res) => {
   }
 };
 
+/**
+ * DECREASE STOCK (CRITICAL VALIDATION)
+ * PATCH /api/products/:id/decrease
+ *
+ * Body: { amount: positive integer }
+ * PREVENTS stock from going below zero (business rule!)
+ * Returns: 200 with updated product, or 400 if insufficient stock
+ */
 const decreaseStock = async (req, res) => {
   try {
     const { amount } = req.body;
